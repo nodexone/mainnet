@@ -9,24 +9,25 @@ echo " ██╔██╗ ██║██║   ██║██║  ██║█�
 echo " ██║╚██╗██║██║   ██║██║  ██║██╔══╝   ██╔██╗     ██║     ██╔══██║██╔═══╝ ██║   ██║   ██╔══██║██║     ";
 echo " ██║ ╚████║╚██████╔╝██████╔╝███████╗██╔╝ ██╗    ╚██████╗██║  ██║██║     ██║   ██║   ██║  ██║███████╗";
 echo " ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝";
-echo ">>> Cosmovisor Automatic Installer for Planq Network | Chain ID : planq_7070-2 <<<";
+echo ">>> Cosmovisor Automatic Installer for 8Ball | Chain ID : eightball-1 <<<";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=planq
+# SOURCE=
 WALLET=wallet
-BINARY=planqd
-FOLDER=.planqd
-CHAIN=planq_7070-2
-VERSION=v1.0.3
-DENOM=aplanq
+BINARY=8ball
+FOLDER=.8ball
+CHAIN=eightball-1
+# VERSION=
+DENOM=uebl
 COSMOVISOR=cosmovisor
-REPO=https://github.com/planq-network/planq
-GENESIS=https://snap.nodexcapital.com/planq/genesis.json
-ADDRBOOK=https://snap.nodexcapital.com/planq/addrbook.json
-PORT=44
+REPO=https://8ball.info/8ball.tar.gz
+BIN_NAME=8ball.tar.gz
+GENESIS=https://8ball.info/8ball-genesis.json
+# ADDRBOOK=
+PORT=118
 
 
 echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
@@ -37,9 +38,10 @@ echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
 echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
 echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
 echo "export REPO=${REPO}" >> $HOME/.bash_profile
+echo "export BIN_NAME=${BIN_NAME}" >> $HOME/.bash_profile
 echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
 echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
-echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
+# echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
 echo "export PORT=${PORT}" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
@@ -49,9 +51,9 @@ if [ ! $NODENAME ]; then
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
 echo ""
-echo -e "YOUR NODE NAME : \e[1m\e[31m$NODENAME\e[0m"
-echo -e "NODE CHAIN CHAIN  : \e[1m\e[31m$CHAIN\e[0m"
-echo -e "NODE PORT      : \e[1m\e[31m$PORT\e[0m"
+echo -e "YOUR NODE NAME : \e[1m\e[35m$NODENAME\e[0m"
+echo -e "NODE CHAIN CHAIN  : \e[1m\e[35m$CHAIN\e[0m"
+echo -e "NODE PORT      : \e[1m\e[35m$PORT\e[0m"
 echo ""
 
 # Package
@@ -67,17 +69,18 @@ eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 
 # Get mainnet version of planq
 cd $HOME
-rm -rf $SOURCE
-git clone $REPO
-cd $SOURCE
-git checkout $VERSION
-make build
+# rm -rf $SOURCE
+# git clone $REPO
+# cd $SOURCE
+# git checkout $VERSION
+# make build
 go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
-rm -rf build
+wget -O $HOME/$FOLDER/$COSMOVISOR/genesis/bin/$BINARY $REPO
+tar -xvf $HOME/$FOLDER/cosmovisor/genesis/bin/*
+rm -rf $HOME/$FOLDER/cosmovisor/genesis/bin/$BIN_NAME
 
 # Create application symlinks
 ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
@@ -90,12 +93,12 @@ $BINARY config node tcp://localhost:${PORT}657
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS=$(curl -sL https://raw.githubusercontent.com/planq-network/networks/main/mainnet/seeds.txt | awk '{print $1}' | paste -s -d, -)
-sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
+PEERS="fca96d0a1d7357afb226a49c4c7d9126118c37e9@one.8ball.info:26656,aa918e17c8066cd3b031f490f0019c1a95afe7e3@two.8ball.info:26656,98b49fea92b266ed8cfb0154028c79f81d16a825@three.8ball.info:26656"
+sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/$FOLDER/config/config.toml
 
 # Download genesis and addrbook
 curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
-curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
+# curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}660\"%" $HOME/$FOLDER/config/config.toml
@@ -117,10 +120,25 @@ sed -i -e "s/prometheus = false/prometheus = true/" $HOME/$FOLDER/config/config.
 # Set minimum gas price
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.025$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
-# Enable snapshots
+#Disable Indexing
+sed -i -e 's|^indexer *=.*|indexer = "null"|' $HOME/$FOLDER/config/config.toml
+
+# Enable snapshots / State Sync
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snap.nodexcapital.com/planq/planq-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+
+SNAP_RPC="https://8ball-rpc.genznodes.dev:443"
+LATEST_HEIGHT=$(curl -s $SNAP_RPC/block | jq -r .result.block.header.height); \
+BLOCK_HEIGHT=$((LATEST_HEIGHT - 2000)); \
+TRUST_HASH=$(curl -s "$SNAP_RPC/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+
+PEERS=fb1aa0a42ceadeafaecb6dfa07215006b21ea1c1@154.26.138.73:28656
+sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/$FOLDER/config/config.toml
+
+sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
+s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC,$SNAP_RPC\"| ; \
+s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
+s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/$FOLDER/config/config.toml
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
@@ -147,10 +165,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
 sudo systemctl start $BINARY
 
-echo -e "\e[1m\e[31mSETUP FINISHED\e[0m"
+echo -e "\e[1m\e[35mSETUP FINISHED\e[0m"
 echo ""
-echo -e "CHECK RUNNING LOGS : \e[1m\e[31mjournalctl -fu $BINARY -o cat\e[0m"
-echo -e "CHECK LOCAL STATUS : \e[1m\e[31mcurl -s localhost:${PORT}657/status | jq .result.sync_info\e[0m"
+echo -e "CHECK RUNNING LOGS : \e[1m\e[35mjournalctl -fu $BINARY -o cat\e[0m"
+echo -e "CHECK LOCAL STATUS : \e[1m\e[35mcurl -s localhost:${PORT}657/status | jq .result.sync_info\e[0m"
 echo ""
 
 # End
