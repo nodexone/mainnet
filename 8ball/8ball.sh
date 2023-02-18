@@ -24,21 +24,21 @@ CHAIN=eightball-1
 DENOM=uebl
 COSMOVISOR=cosmovisor
 REPO=https://8ball.info/8ball.tar.gz
-BIN_NAME=8ball.tar.gz
+FILE_NAME=8ball.tar.gz
 GENESIS=https://8ball.info/8ball-genesis.json
 # ADDRBOOK=
 PORT=118
 
 
-echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
+# echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
 echo "export WALLET=${WALLET}" >> $HOME/.bash_profile
 echo "export BINARY=${BINARY}" >> $HOME/.bash_profile
 echo "export CHAIN=${CHAIN}" >> $HOME/.bash_profile
 echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
 echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
-echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
+# echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
 echo "export REPO=${REPO}" >> $HOME/.bash_profile
-echo "export BIN_NAME=${BIN_NAME}" >> $HOME/.bash_profile
+echo "export FILE_NAME=${FILE_NAME}" >> $HOME/.bash_profile
 echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
 echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
 # echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
@@ -58,6 +58,7 @@ echo ""
 
 # Package
 sudo apt -q update
+sudo apt install libc6
 sudo apt -qy install curl git jq lz4 build-essential
 sudo apt -qy upgrade
 
@@ -69,18 +70,18 @@ eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 
 # Get mainnet version of planq
 cd $HOME
-# rm -rf $SOURCE
-# git clone $REPO
-# cd $SOURCE
-# git checkout $VERSION
-# make build
+wget $REPO
+tar -xvf $FILE_NAME
+chmod +x $BINARY
 go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-wget -O $HOME/$FOLDER/$COSMOVISOR/genesis/bin/$BINARY $REPO
-tar -xvf $HOME/$FOLDER/cosmovisor/genesis/bin/*
-rm -rf $HOME/$FOLDER/cosmovisor/genesis/bin/$BIN_NAME
+mv $BINARY $HOME/$FOLDER/cosmovisor/genesis/bin/
+rm -rf $FILE_NAME
+
+# Checked Version
+$BINARY version
 
 # Create application symlinks
 ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
