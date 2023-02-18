@@ -27,7 +27,7 @@ REPO=https://8ball.info/8ball.tar.gz
 FILE_NAME=8ball.tar.gz
 GENESIS=https://8ball.info/8ball-genesis.json
 # ADDRBOOK=
-PORT=182
+PORT=110
 
 
 # echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
