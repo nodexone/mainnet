@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/vincadian/arkh-blockchain
 GENESIS=https://raw.githubusercontent.com/nodexcapital/mainnet/main/arkhadian/genesis.json
 ADDRBOOK=https://raw.githubusercontent.com/nodexcapital/mainnet/main/arkhadian/addrbook.json
-PORT=136
+PORT=137
 
 
 echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
@@ -85,7 +85,7 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 # Init generation
 $BINARY config chain-id $CHAIN
 $BINARY config keyring-backend file
-$BINARY config node tcp://localhost:${PORT}657
+$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
