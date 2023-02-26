@@ -24,9 +24,9 @@ VERSION=v1.0.3
 DENOM=aplanq
 COSMOVISOR=cosmovisor
 REPO=https://github.com/planq-network/planq
-GENESIS=https://snap.nodexcapital.com/planq/genesis.json
-ADDRBOOK=https://snap.nodexcapital.com/planq/addrbook.json
-PORT=44
+GENESIS=https://snapshots.nodeist.net/planq/genesis.json
+ADDRBOOK=https://snapshots.nodeist.net/planq/addrbook.json
+PORT=127
 
 
 echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
@@ -49,15 +49,17 @@ if [ ! $NODENAME ]; then
 	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
 echo ""
-echo -e "YOUR NODE NAME : \e[1m\e[31m$NODENAME\e[0m"
-echo -e "NODE CHAIN CHAIN  : \e[1m\e[31m$CHAIN\e[0m"
-echo -e "NODE PORT      : \e[1m\e[31m$PORT\e[0m"
+echo -e "YOUR NODE NAME : \e[1m\e[35m$NODENAME\e[0m"
+echo -e "NODE CHAIN CHAIN  : \e[1m\e[35m$CHAIN\e[0m"
+echo -e "NODE PORT      : \e[1m\e[35m$PORT\e[0m"
 echo ""
 
 # Package
 sudo apt -q update
 sudo apt -qy install curl git jq lz4 build-essential
 sudo apt -qy upgrade
+sudo apt install snapd -y
+sudo snap install lz4
 
 # Install GO
 sudo rm -rf /usr/local/go
@@ -86,20 +88,23 @@ sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 # Init generation
 $BINARY config chain-id $CHAIN
 $BINARY config keyring-backend file
-$BINARY config node tcp://localhost:${PORT}657
+$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
 SEEDS=$(curl -sL https://raw.githubusercontent.com/planq-network/networks/main/mainnet/seeds.txt | awk '{print $1}' | paste -s -d, -)
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 
+#Disable Indexer
+sed -i -e 's|^indexer *=.*|indexer = "null"|' $HOME/$FOLDER/config/config.toml
+
 # Download genesis and addrbook
 curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
 curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
 
 # Set Port
-sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}660\"%" $HOME/$FOLDER/config/config.toml
-sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${PORT}317\"%; s%^address = \":8080\"%address = \":${PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${PORT}091\"%" $HOME/$FOLDER/config/app.toml
+sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}60\"%" $HOME/$FOLDER/config/config.toml
+sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${PORT}17\"%; s%^address = \":8080\"%address = \":${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${PORT}91\"%" $HOME/$FOLDER/config/app.toml
 
 # Set Config Pruning
 pruning="custom"
@@ -120,7 +125,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.025$DENOM\"/" $HO
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snap.nodexcapital.com/planq/planq-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+curl -L https://snap.nodeist.net/planq/planq.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER --strip-components 2
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
@@ -147,10 +152,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
 sudo systemctl start $BINARY
 
-echo -e "\e[1m\e[31mSETUP FINISHED\e[0m"
+echo -e "\e[1m\e[35mSETUP FINISHED\e[0m"
 echo ""
-echo -e "CHECK RUNNING LOGS : \e[1m\e[31mjournalctl -fu $BINARY -o cat\e[0m"
-echo -e "CHECK LOCAL STATUS : \e[1m\e[31mcurl -s localhost:${PORT}657/status | jq .result.sync_info\e[0m"
+echo -e "CHECK RUNNING LOGS : \e[1m\e[35mjournalctl -fu $BINARY -o cat\e[0m"
+echo -e "CHECK LOCAL STATUS : \e[1m\e[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\e[0m"
 echo ""
 
 # End
