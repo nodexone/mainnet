@@ -30,7 +30,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | Stride       | 133           | [Click Here](./stride/README.md)        | [Click Here](./babylostriden/monitoring/README.md)        |   N/A    |
 | Teritori       | 134           | [Click Here](./teritori/README.md)        | [Click Here](./teritori/monitoring/README.md)        |   N/A    |
 | Umee       | 135           | [Click Here](./umee/README.md)        | [Click Here](./umee/monitoring/README.md)        |   N/A    |
-| Arkhadian       | 136           | [Click Here](./arkhadian/README.md)        | [Click Here](./arkhadina/monitoring/README.md)        |   N/A    |
+| Arkhadian       | 137           | [Click Here](./arkhadian/README.md)        | [Click Here](./arkhadina/monitoring/README.md)        |   N/A    |
 
 
 Regards ~ [Whyme | NodeX Capital](https://discord.com/users/928575843641479198)

@@ -24,8 +24,8 @@ VERSION=v2.0.0
 DENOM=arkh
 COSMOVISOR=cosmovisor
 REPO=https://github.com/vincadian/arkh-blockchain
-GENESIS=https://raw.githubusercontent.com/nodexcapital/mainnet/main/arkhadian/genesis.json
-ADDRBOOK=https://raw.githubusercontent.com/nodexcapital/mainnet/main/arkhadian/addrbook.json
+GENESIS=https://snapshots.nodeist.net/arkh/genesis.json
+ADDRBOOK=https://snapshots.nodeist.net/arkh/addrbook.json
 PORT=137
 
 
@@ -58,7 +58,6 @@ echo ""
 sudo apt -q update
 sudo apt -qy install curl git jq lz4 build-essential
 sudo apt -qy upgrade
-sudo apt update
 sudo apt install snapd -y
 sudo snap install lz4
 
@@ -97,12 +96,8 @@ sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDE
 sed -i -e "s|^seeds *=.*|seeds = \"808f01d4a7507bf7478027a08d95c575e1b5fa3c@asc-dataseed.arkhadian.com:26656\"|" $HOME/$FOLDER/config/config.toml
 
 # Download genesis and addrbook
-#touch $HOME/$FOLDER/config/genesis.json
 curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
 curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
-
-#Disable Indexer
-sed -i -e 's|^indexer *=.*|indexer = "null"|' $HOME/$FOLDER/config/config.toml
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}60\"%" $HOME/$FOLDER/config/config.toml
