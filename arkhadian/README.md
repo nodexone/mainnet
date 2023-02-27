@@ -25,9 +25,9 @@ wget -O arkh.sh https://raw.githubusercontent.com/nodexcapital/mainnet/main/arkh
 ```
 ### Public Endpoint
 
->- API : https://api.arkh.nodexcapital.com
->- RPC : https://rpc.arkh.nodexcapital.com
->- gRPC : https://grpc.arkh.nodexcapital.com
+>- API : https://rest.arkh-m.nodexcapital.com
+>- RPC : https://rpc.arkh-m.nodexcapital.com
+>- gRPC : https://grpc.arkh-m.nodexcapital.com
 
 ### Snapshot (Update every 5 hours)
 ```
