@@ -26,7 +26,7 @@ COSMOVISOR=cosmovisor
 REPO=https://github.com/cryptonetD/lumenx.git
 GENESIS=https://raw.githubusercontent.com/cryptonetD/lumenx/master/config/genesis.json
 # ADDRBOOK=https://snapshots.nodeist.net/arkh/addrbook.json
-PORT=137
+PORT=138
 
 
 echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
@@ -151,6 +151,7 @@ sudo systemctl start $BINARY
 
 echo -e "\e[1m\e[35mSETUP FINISHED\e[0m"
 echo ""
+echo -e "CHECK STATUS LOGS  : \e[1m\e[35msystemctl status $BINARY\e[0m"
 echo -e "CHECK RUNNING LOGS : \e[1m\e[35mjournalctl -fu $BINARY -o cat\e[0m"
 echo -e "CHECK LOCAL STATUS : \e[1m\e[35mcurl -s localhost:${PORT}57/status | jq .result.sync_info\e[0m"
 echo ""
