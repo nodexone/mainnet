@@ -10,7 +10,7 @@
   <img height="100" height="auto" src="https://raw.githubusercontent.com/nodexcapital/explorer/master/public/logos/planq.svg">
 </p>
 
-# Planq Node Setup for Mainnet planq_7070-2 | Custom Port : 127
+# Planq Network Mainnet | Chain ID : planq_7070-2 | Custom Port : 127
 
 Official documentation:
 >- [Validator setup instructions](https://docs.planq.network/validators/quickstart/installation.html/)
