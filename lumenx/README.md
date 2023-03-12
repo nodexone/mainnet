@@ -10,7 +10,7 @@
   <img height="100" height="auto" src="https://raw.githubusercontent.com/cosmos/chain-registry/master/lumenx/images/lumen.png">
 </p>
 
-# LumenX Mainnet | Chain ID : LumenX
+# LumenX Mainnet | Chain ID: LumenX | Custom Port: 138
 
 ### Community Documentation:
 >- [Validator setup instructions](https://github.com/nodexcapital/mainnet/tree/main/lumenx)
