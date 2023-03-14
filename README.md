@@ -33,6 +33,8 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | Arkhadian       | 137           | [Click Here](./arkhadian/README.md)        | [Click Here](./arkhadina/monitoring/README.md)        |   N/A    |
 | LumenX       | 138           | [Click Here](./lumenx/README.md)        | [Click Here](./lumenx/monitoring/README.md)        |   N/A    |
 | Chain4Energy       | 139          | [Click Here](./4energy/README.md)        | [Click Here](./4energy/monitoring/README.md)        |   N/A    |
+| Kyve Network       | 140          | [Click Here](./kyve/README.md)        | [Click Here](./kyve/monitoring/README.md)        |   N/A    |
+
 
 
 Regards ~ [Whyme | NodeX Capital](https://discord.com/users/928575843641479198)
