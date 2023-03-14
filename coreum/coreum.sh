@@ -9,24 +9,24 @@ echo " ██╔██╗ ██║██║   ██║██║  ██║█�
 echo " ██║╚██╗██║██║   ██║██║  ██║██╔══╝   ██╔██╗     ██║     ██╔══██║██╔═══╝ ██║   ██║   ██╔══██║██║     ";
 echo " ██║ ╚████║╚██████╔╝██████╔╝███████╗██╔╝ ██╗    ╚██████╗██║  ██║██║     ██║   ██║   ██║  ██║███████╗";
 echo " ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝";
-echo ">>> Cosmovisor Automatic Installer for Kyve Network | Chain ID : perun-1 <<<";
+echo ">>> Cosmovisor Automatic Installer for Coreum | Chain ID : coreum-mainnet-1 <<<";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=chain
+BIN_NAME=cored-linux-amd64
 WALLET=wallet
-BINARY=kyved
-CHAIN=kyve-1
-FOLDER=.kyve
-VERSION=v1.0.0
+BINARY=cored
+CHAIN=coreum-mainnet-1
+FOLDER=.core
+#VERSION=v1.0.0
 COSMOVISOR=cosmovisor
-REPO=https://github.com/KYVENetwork/chain.git
-GENESIS=https://snap.nodexcapital.com/kyve/genesis.json
-ADDRBOOK=https://snap.nodexcapital.com/kyve/addrbook.json
-DENOM=ukyve
-PORT=140
+REPO=https://github.com/CoreumFoundation/coreum/releases/download/v1.0.0/cored-linux-amd64
+GENESIS=https://snap.nodexcapital.com/coreum/genesis.json
+ADDRBOOK=https://snap.nodexcapital.com/coreum/addrbook.json
+DENOM=ucore
+PORT=141
 
 
 # Set Vars
@@ -40,7 +40,7 @@ echo ""
 echo -e "NODE NAME      : \e[1m\e[35m$NODENAME\e[0m"
 echo -e "WALLET NAME    : \e[1m\e[35m$WALLET\e[0m"
 echo -e "CHAIN NAME     : \e[1m\e[35m$CHAIN\e[0m"
-echo -e "NODE VERSION   : \e[1m\e[35m$VERSION\e[0m"
+#echo -e "NODE VERSION   : \e[1m\e[35m$VERSION\e[0m"
 echo -e "NODE FOLDER    : \e[1m\e[35m$FOLDER\e[0m"
 echo -e "NODE DENOM     : \e[1m\e[35m$DENOM\e[0m"
 echo -e "NODE ENGINE    : \e[1m\e[35m$COSMOVISOR\e[0m"
@@ -52,12 +52,13 @@ read -p "Is the above information correct? (y/n) " choice
 if [[ $choice == [Yy]* ]]; then
 
 echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
+echo "export BIN_NAME=${BIN_NAME}" >> $HOME/.bash_profile
 echo "export WALLET=${WALLET}" >> $HOME/.bash_profile
 echo "export BINARY=${BINARY}" >> $HOME/.bash_profile
 echo "export CHAIN=${CHAIN}" >> $HOME/.bash_profile
 echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
 echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
-echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
+#echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
 echo "export REPO=${REPO}" >> $HOME/.bash_profile
 echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
 echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
@@ -80,27 +81,24 @@ sudo snap install lz4
 
 # Install GO
 sudo rm -rf /usr/local/go
-curl -Ls https://go.dev/dl/go1.19.5.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+curl -Ls https://go.dev/dl/go1.19.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 
 # Get mainnet version of planq
 cd $HOME
-rm -rf $SOURCE
-git clone $REPO
-cd $SOURCE
-git checkout $VERSION
-make build
+curl -LOf $REPO
+chmod +x $BIN_NAME
 go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 
 # Prepare binaries for Cosmovisor
-mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
-mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+mkdir -p $HOME/$FOLDER/$CHAIN/$COSMOVISOR/genesis/bin
+mv $BIN_NAME $HOME/$FOLDER/$CHAIN/$COSMOVISOR/genesis/bin/$BINARY
 rm -rf build
 
 # Create application symlinks
-ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
-sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
+ln -s $HOME/$FOLDER/$CHAIN/$COSMOVISOR/genesis $HOME/$FOLDER/$CHAIN/$COSMOVISOR/current
+sudo ln -s $HOME/$FOLDER/$CHAIN/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
 $BINARY config chain-id $CHAIN
@@ -109,40 +107,44 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-PEERS="b950b6b08f7a6d5c3e068fcd263802b336ffe047@18.198.182.214:26656,25da6253fc8740893277630461eb34c2e4daf545@3.76.244.30:26656,146d27829fd240e0e4672700514e9835cb6fdd98@34.212.201.1:26656,fae8cd5f04406e64484a7a8b6719eacbb861c094@44.241.103.199:26656,443f41172aafaa6c711333c621e019fde3f0ba99@5.75.144.137:26656,cfb5d3dc65e8e1d17285964655d2b47a44d35721@144.76.97.251:42656,c782ab00baf1c86261db0570307a9ecd9c5b197a@5.9.63.216:28656,38ef1bd70583c8831c3c0e07fad7e1bab56515cc@68.183.143.17:26656,307f4024107ef114dba355fe97dab44b8b45cefc@38.242.253.58:29656,86d313c22789ffa50c76b85b460f1e1412782a27@195.3.221.59:12656,a0ba3bd9616b51c26ab6ecc49a30a13d0438ab7f@65.109.94.250:28656,cec6c3c59d1bde0862d27500bf3c0ecc39b4727d@3.144.87.60:31309,0ab23bfd2924c09a0cb2166a78e65d6d0fbd172a@57.128.162.152:26656"
-SEEDS="4a72671447a1ede2a136dbac70ac4523c3433c94@seeds.cros-nest.com:29656"
-sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
-sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
+PEERS="8cedd961a72c183686e9b0b67b6e54fccd6471c3@35.194.10.107:26656,81e76bc013acbb2048e7acfb2ab04d80732a3699@34.122.166.246:26656,55cec213e8f3738d2642147d857afab93b1a4ef6@34.172.192.61:26656,62b207017a272a1452ebe7e67018a4f6be1146d8@34.172.201.60:26656,094189cad7921baf44c280ee8efed959869f3a22@34.66.215.21:26656,d65085259afd2065796bba7430d61fe85042e1c3@190.92.219.25:26656,eeb17ff4b1dad8d20fdafc339c277f7a624bb84a@35.238.253.76:26656,92b67a34dbda739a92cd04561ac8c33bfa858477@34.67.59.88:26656,2505072cc9586c0c4fafa092a2352123d8c12936@34.28.225.76:26656"
+SEEDS=""
+sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/$CHAIN/config/config.toml
+sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/$CHAIN/config/config.toml
 
 # Download genesis and addrbook
-curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
-curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
+curl -Ls $GENESIS > $HOME/$FOLDER/$CHAIN/config/genesis.json
+curl -Ls $ADDRBOOK > $HOME/$FOLDER/$CHAIN/config/addrbook.json
 
 # Set Port
-sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}60\"%" $HOME/$FOLDER/config/config.toml
-sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${PORT}17\"%; s%^address = \":8080\"%address = \":${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${PORT}91\"%" $HOME/$FOLDER/config/app.toml
+sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${PORT}60\"%" $HOME/$FOLDER/$CHAIN/config/config.toml
+sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${PORT}17\"%; s%^address = \":8080\"%address = \":${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${PORT}91\"%" $HOME/$FOLDER/$CHAIN/config/app.toml
 
 # Set Config Pruning
 pruning="custom"
 pruning_keep_recent="100"
 pruning_keep_every="0"
 pruning_interval="19"
-sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/$FOLDER/config/app.toml
-sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/$FOLDER/config/app.toml
-sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/$FOLDER/config/app.toml
-sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
 
 # Set Config prometheus
-sed -i -e "s/prometheus = false/prometheus = true/" $HOME/$FOLDER/config/config.toml
+sed -i -e "s/prometheus = false/prometheus = true/" $HOME/$FOLDER/$CHAIN/config/config.toml
 
 # Set minimum gas price
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0$DENOM\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
 
-# Enable snapshots
-sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
-$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snap.nodexcapital.com/kyve/kyve-latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER
-[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
+# Enable State Sync
+sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/$CHAIN/config/app.toml
+$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER/$CHAIN --keep-addr-book
+curl -L https://snap.nodexcapital.com/coreum/coreum-latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER/$CHAIN
+
+#Delete Trash File
+cd $HOME/$FOLDER/$CHAIN/
+rm -rf $CHAIN
+rm -rf .coreum
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
@@ -156,7 +158,7 @@ ExecStart=$(which cosmovisor) run start
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
-Environment="DAEMON_HOME=$HOME/$FOLDER"
+Environment="DAEMON_HOME=$HOME/$FOLDER/$CHAIN"
 Environment="DAEMON_NAME=$BINARY"
 Environment="UNSAFE_SKIP_BACKUP=true"
 

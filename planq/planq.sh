@@ -24,8 +24,8 @@ VERSION=v1.0.5
 DENOM=aplanq
 COSMOVISOR=cosmovisor
 REPO=https://github.com/planq-network/planq
-GENESIS=https://snapshots.nodeist.net/planq/genesis.json
-ADDRBOOK=https://snapshots.nodeist.net/planq/addrbook.json
+GENESIS=https://snap.nodexcapital.com/planq/genesis.json
+ADDRBOOK=https://snap.nodexcapital.com/planq/addrbook.json
 PORT=127
 
 
@@ -139,7 +139,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0085$DENOM\"/" $H
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
-curl -L https://snap.nodeist.net/planq/planq.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER --strip-components 2
+curl -L https://snap.nodexcapital.com/planq/planq-latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/$FOLDER --strip-components 2
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service

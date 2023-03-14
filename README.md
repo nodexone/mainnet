@@ -34,6 +34,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | LumenX       | 138           | [Click Here](./lumenx/README.md)        | [Click Here](./lumenx/monitoring/README.md)        |   N/A    |
 | Chain4Energy       | 139          | [Click Here](./4energy/README.md)        | [Click Here](./4energy/monitoring/README.md)        |   N/A    |
 | Kyve Network       | 140          | [Click Here](./kyve/README.md)        | [Click Here](./kyve/monitoring/README.md)        |   N/A    |
+| Coreum       | 141          | [Click Here](./coreum/README.md)        | [Click Here](./coreum/monitoring/README.md)        |   N/A    |
 
 
 
