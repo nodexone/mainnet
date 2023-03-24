@@ -4,6 +4,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 
 | Project name | Port Mainnet | Automatic Installer                           | Monitoring                                       | Snapshot |
 |--------------|--------------|-----------------------------------------------|--------------------------------------------------|----------|
+| Decentr          | 108           | [Click Here](./decentr/README.md)         | [Click Here](./decentr/monitoring/README.md)         |   N/A    |
 | Quasar          | 109           | [Click Here](./quasar/README.md)         | [Click Here](./quasar/monitoring/README.md)         |   N/A    |
 | 8ball          | 110           | [Click Here](./8ball/README.md)         | [Click Here](./8ball/monitoring/README.md)         |   N/A    |
 | Akash        | 111           | [Click Here](./akash/README.md)       | [Click Here](./akash/monitoring/README.md)       |   N/A    |
