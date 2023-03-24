@@ -105,7 +105,7 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@quasar.rpc.kjnodes.com:48659,9cbd857db8203439f294baac260f3f0b677861bf@rpc.quasar.nodexcapital.com:10956"
+SEEDS="git400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@quasar.rpc.kjnodes.com:48659,9cbd857db8203439f294baac260f3f0b677861bf@rpc.quasar.nodexcapital.com:10956"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 
 # Download genesis and addrbook
