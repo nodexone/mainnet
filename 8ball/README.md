@@ -10,7 +10,7 @@
   <img height="100" height="auto" src="https://explorer.genznodes.dev/logos/8ball.png">
 </p>
 
-# 8Ball Mainnet | Chain ID : eightball-1
+# 8Ball Mainnet | Chain ID : eightball-1 | Custom Port: 110
 
 ### Community Documentation:
 >- [Validator setup instructions](https://github.com/nodexcapital/mainnet/blob/main/8ball/README.md)

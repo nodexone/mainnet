@@ -36,7 +36,7 @@ sudo systemctl stop cored
 cp $HOME/.core/coreum-mainnet-1/data/priv_validator_state.json $HOME/.core/coreum-mainnet-1/priv_validator_state.json.backup
 rm -rf $HOME/.core/coreum-mainnet-1/data
 
-curl -L https://snap.nodexcapital.com/coreum/coreum-latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.core/coreum-mainnet-1
+curl -L https://snap.nodexcapital.com/coreum/coreum-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.core/coreum-mainnet-1
 mv $HOME/.core/coreum-mainnet-1/priv_validator_state.json.backup $HOME/.core/coreum-mainnet-1/data/priv_validator_state.json
 
 sudo systemctl start cored && sudo journalctl -u cored -f --no-hostname -o cat

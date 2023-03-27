@@ -7,18 +7,4 @@
 <hr>
 
 
-# Mainnet Node Setup 
-
-Official documentation:
->- [Validator setup instructions](https://docs.planq.network/validators/quickstart/installation.html/)
-
-Explorer:
->-  https://explorer.nodexcapital.com/planq
-
-### Automatic Installer
-You can setup your planq fullnode in few minutes by using automated script below.
-```
-wget -O planq.sh https://raw.githubusercontent.com/nodexcapital/testnet/main/planq/planq.sh && chmod +x planq.sh && ./planq.sh
-```
-### Manual Installer (Gitbook)
-You can follow [Gitbook Guide](https://service.nodexcapital.com/mainnet/planq) if you better prefer 
+# Coming Soon
