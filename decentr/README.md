@@ -29,7 +29,7 @@ wget -O decentr.sh https://raw.githubusercontent.com/nodexcapital/mainnet/main/d
 >- RPC : https://rpc.decentr.nodexcapital.com
 >- gRPC : https://grpc.decentr.nodexcapital.com
 
-### Snapshot (Update every 12 hours)
+### Snapshot
 ```
 sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
@@ -47,8 +47,8 @@ sudo systemctl stop decentrd
 cp $HOME/.decentr/data/priv_validator_state.json $HOME/.decentr/priv_validator_state.json.backup
 decentrd tendermint unsafe-reset-all --home $HOME/.decentr
 
-STATE_SYNC_RPC=https://rpc.decentr.indonode.net:443
-STATE_SYNC_PEER=c64ca37b8ec8627a28d243d466f3928eb0d96137@rpc.decentr.indonode.net:17656 
+STATE_SYNC_RPC=https://rpc.decentr.nodexcapital.com:443
+STATE_SYNC_PEER=a6ebaed2c7972941b5cce5d94ec94a1352a600a4@peers-decentr.sxlzptprjkt.xyz:31656 
 LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
 SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
 SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
@@ -63,8 +63,6 @@ sed -i \
 
 mv $HOME/.decentr/priv_validator_state.json.backup $HOME/.decentr/data/priv_validator_state.json
 
-curl -L https://snap.nodexcapital.com/decentr/wasm.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.decentr
-
 sudo systemctl start decentrd && sudo journalctl -u decentrd -f --no-hostname -o cat
 ```
 
@@ -78,7 +76,7 @@ sudo systemctl restart decentrd && journalctl -u decentrd -f -o cat
 ### Live Peers
 ```
 PEERS="$(curl -sS https://rpc.decentr.nodexcapital.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$peers\"|" $HOME/$FOLDER/config/config.toml
+sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/.decentr/config/config.toml
 ```
 ### Addrbook (Update every hour)
 ```

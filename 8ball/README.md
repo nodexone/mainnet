@@ -25,12 +25,11 @@ wget -O 8ball.sh https://raw.githubusercontent.com/nodexcapital/mainnet/main/8ba
 ```
 ### Public Endpoint
 
->- API : https://api.8ball.nodexcapital.com
+>- API : https://rest.8ball.nodexcapital.com
 >- RPC : https://rpc.8ball.nodexcapital.com
 >- gRPC : https://grpc.8ball.nodexcapital.com
->- gRPC Web : https://grpc-web.8ball.nodexcapital.com
 
-### Snapshot (Update every 5 hours)
+### Snapshot
 ```
 sudo systemctl stop 8ball
 cp $HOME/.8ball/data/priv_validator_state.json $HOME/.8ball/priv_validator_state.json.backup
@@ -62,7 +61,8 @@ sudo systemctl start 8ball && sudo journalctl -fu 8ball -o cat
 
 ### Live Peers
 ```
-COMING SOON
+PEERS="$(curl -sS https://rpc.8ball.nodexcapital.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/.8ball/config/config.toml
 ```
 ### Addrbook (Update every hour)
 ```
