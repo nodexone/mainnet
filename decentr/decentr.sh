@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # // Copyright (C) 2023 Salman Wahib Recoded By NodeX Capital
 #
@@ -26,7 +27,7 @@ REPO=https://github.com/Decentr-net/decentr
 COSMOVISOR=cosmovisor
 GENESIS=https://snap.nodexcapital.com/decentr/genesis.json
 ADDRBOOK=https://snap.nodexcapital.com/decentr/addrbook.json
-PORT=108
+PORT=103
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -105,7 +106,7 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and
-PEERS="a6ebaed2c7972941b5cce5d94ec94a1352a600a4@peers-decentr.sxlzptprjkt.xyz:31656"
+PEERS="$(curl -sS https://rpc-decentr.sxlzptprjkt.xyz/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
 SEEDS="3fb96f1619340507e7f28fd7c4b81f4cd3d9a7e7@seeds-decentr.sxlzptprjkt.xyz:31656,89f32d5e096eadddb1b3e6e839963503ef4d2d70@rpc.decentr.nodexcapital.com:10856"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
@@ -115,8 +116,8 @@ curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
 curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
 
 # Set Port
-sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"tcp://127.0.0.1::${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \"tcp://127.0.0.1:${PORT}60\"%" $HOME/$FOLDER/config/config.toml
-sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://127.0.0.1:${PORT}17\"%; s%^address = \":8080\"%address = \"127.0.0.1::${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"127.0.0.1:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"127.0.0.1:${PORT}91\"%" $HOME/$FOLDER/config/app.toml
+sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"tcp://127.0.0.1:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \"127.0.0.1:${PORT}60\"%" $HOME/$FOLDER/config/config.toml
+sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://127.0.0.1:${PORT}17\"%; s%^address = \":8080\"%address = \"127.0.0.1:${PORT}80\"%; s%^address = \"0.0.0.0:9090\"%address = \"127.0.0.1:${PORT}90\"%; s%^address = \"0.0.0.0:9091\"%address = \"127.0.0.1:${PORT}91\"%" $HOME/$FOLDER/config/app.toml
 
 # Set Config Pruning
 pruning="custom"
@@ -158,8 +159,8 @@ WantedBy=multi-user.target
 EOF
 
 # Register And Start Service
-sudo systemctl start $BINARY
 sudo systemctl daemon-reload
+sudo systemctl start $BINARY
 sudo systemctl enable $BINARY
 
 echo -e "\033[0;35m=============================================================\033[0m"
