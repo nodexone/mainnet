@@ -106,8 +106,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and
-PEERS="$(curl -sS https://rpc-decentr.sxlzptprjkt.xyz/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-SEEDS="3fb96f1619340507e7f28fd7c4b81f4cd3d9a7e7@seeds-decentr.sxlzptprjkt.xyz:31656,89f32d5e096eadddb1b3e6e839963503ef4d2d70@rpc.decentr.nodexcapital.com:10856"
+PEERS="$(curl -sS https://rpc.decentr.nodexcapital.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS=""
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -160,8 +160,8 @@ EOF
 
 # Register And Start Service
 sudo systemctl daemon-reload
-sudo systemctl start $BINARY
 sudo systemctl enable $BINARY
+sudo systemctl start $BINARY
 
 echo -e "\033[0;35m=============================================================\033[0m"
 echo -e "\033[0;35mCONGRATS! SETUP FINISHED\033[0m"

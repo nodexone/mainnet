@@ -10,7 +10,7 @@
   <img height="100" height="auto" src="https://raw.githubusercontent.com/cosmos/chain-registry/master/lumenx/images/lumen.png">
 </p>
 
-# LumenX Mainnet | Chain ID: LumenX | Custom Port: 138
+# LumenX Mainnet | Chain ID: LumenX | Custom Port: 112
 
 ### Community Documentation:
 >- [Validator setup instructions](https://github.com/nodexcapital/mainnet/tree/main/lumenx)
@@ -19,7 +19,7 @@
 >-  https://explorer.nodexcapital.com/lumenx/
 
 ### Automatic Installer (Must Using Ubuntu 22 Version!)
-You can setup your Arkhadian fullnode in few minutes by using automated script below
+You can setup your LumenX fullnode in few minutes by using automated script below
 ```
 wget -O lumenx.sh https://raw.githubusercontent.com/nodexcapital/mainnet/main/lumenx/lumenx.sh && chmod +x lumenx.sh && ./lumenx.sh
 ```

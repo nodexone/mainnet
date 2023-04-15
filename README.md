@@ -19,6 +19,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | LumenX       | 112          | [Click Here](./lumenx/README.md)  |[Click Here](https://nodexcapital.com/mainnet)|
 | Chain4Energy | 113          | [Click Here](./4energy/README.md) |[Click Here](https://nodexcapital.com/mainnet)|
 | Kyve         | 114          | [Click Here](./kyve/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
+| Realio       | 115         | [Click Here](./realio/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Akash        | N/A          | [Click Here](./akash/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Bitcanna     | N/A          | [Click Here](./bitcanna/README.md)|[Click Here](https://nodexcapital.com/mainnet)|    
 | Canto        | N/A          | [Click Here](./canto/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|         
