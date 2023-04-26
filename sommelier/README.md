@@ -11,7 +11,7 @@
   <img height="100" height="auto" src="https://polkachu.com/images/chains/sommelier.png">
 </p>
 
-# sommelier Mainnet | Chain ID : sommelier-3 | Custom Port : 117
+# Sommelier Mainnet | Chain ID : sommelier-3 | Custom Port : 117
 
 ### Community Documentation:
 >- [Validator setup instructions](https://polkachu.com/networks/sommelier)

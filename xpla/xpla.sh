@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# // Copyright (C) 2023 Salman Wahib Recoded By NodeX Capital
+# // Copyright (C) 2022 Salman Wahib Recoded By NodeX Capital
 #
 
 echo -e "\033[0;35m"
@@ -10,29 +10,43 @@ echo " ██╔██╗ ██║██║   ██║██║  ██║█�
 echo " ██║╚██╗██║██║   ██║██║  ██║██╔══╝   ██╔██╗     ██║     ██╔══██║██╔═══╝ ██║   ██║   ██╔══██║██║     ";
 echo " ██║ ╚████║╚██████╔╝██████╔╝███████╗██╔╝ ██╗    ╚██████╗██║  ██║██║     ██║   ██║   ██║  ██║███████╗";
 echo " ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝";
-echo ">>> Cosmovisor Automatic Installer for Sommelier | Chain ID : sommelier-3 <<<";
+echo ">>> Cosmovisor Automatic Installer for Xpla | Chain ID : dimension_37-1 <<<";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=sommelier
+SOURCE=xpla
 WALLET=wallet
-BINARY=sommelier
-FOLDER=.sommelier
-CHAIN=sommelier-3
-VERSION=v5.0.0
-DENOM=usomm
+BINARY=xplad
+CHAIN=dimension_37-1
+FOLDER=.xpla
+VERSION=v1.1.3
+DENOM=uxpla
 COSMOVISOR=cosmovisor
-REPO=https://github.com/PeggyJV/sommelier
-GENESIS=https://snap.nodexcapital.com/sommelier/genesis.json
-ADDRBOOK=https://snap.nodexcapital.com/sommelier/addrbook.json
-PORT=117
+REPO=https://github.com/xpladev/xpla
+GENESIS=https://snap.nodexcapital.com/xpla/genesis.json
+ADDRBOOK=https://snap.nodexcapital.com/xpla/addrbook.json
+PORT=120
+
+echo "export SOURCE=${SOURCE}" >> $HOME/.bash_profile
+echo "export WALLET=${WALLET}" >> $HOME/.bash_profile
+echo "export BINARY=${BINARY}" >> $HOME/.bash_profile
+echo "export DENOM=${DENOM}" >> $HOME/.bash_profile
+echo "export CHAIN=${CHAIN}" >> $HOME/.bash_profile
+echo "export FOLDER=${FOLDER}" >> $HOME/.bash_profile
+echo "export VERSION=${VERSION}" >> $HOME/.bash_profile
+echo "export COSMOVISOR=${COSMOVISOR}" >> $HOME/.bash_profile
+echo "export REPO=${REPO}" >> $HOME/.bash_profile
+echo "export GENESIS=${GENESIS}" >> $HOME/.bash_profile
+echo "export ADDRBOOK=${ADDRBOOK}" >> $HOME/.bash_profile
+echo "export PORT=${PORT}" >> $HOME/.bash_profile
+source $HOME/.bash_profile
 
 # Set Vars
 if [ ! $NODENAME ]; then
-	read -p "hello@nodexcapital:~# [ENTER YOUR NODE] > " NODENAME
-	echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
+        read -p "hello@nodexcapital:~# [ENTER YOUR NODENAME] > " NODENAME
+        echo 'export NODENAME='$NODENAME >> $HOME/.bash_profile
 fi
 
 echo "Verify the information below before proceeding with the installation!"
@@ -75,14 +89,13 @@ sudo apt -q update
 sudo apt -qy install curl git jq lz4 build-essential
 sudo apt -qy upgrade
 
-
 # Install GO
 sudo rm -rf /usr/local/go
 curl -Ls https://go.dev/dl/go1.19.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 
-# Get mainnet version of arkh
+# Get testnet version of Terp
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
@@ -94,17 +107,21 @@ go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
 # Prepare binaries for Cosmovisor
 mkdir -p $HOME/$FOLDER/$COSMOVISOR/genesis/bin
 mv build/$BINARY $HOME/$FOLDER/$COSMOVISOR/genesis/bin/
+rm -rf build
 
 # Create application symlinks
 ln -s $HOME/$FOLDER/$COSMOVISOR/genesis $HOME/$FOLDER/$COSMOVISOR/current
 sudo ln -s $HOME/$FOLDER/$COSMOVISOR/current/bin/$BINARY /usr/local/bin/$BINARY
 
 # Init generation
+$BINARY config chain-id $CHAIN
+$BINARY config keyring-backend test
+$BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and seeds
-PEERS="$(curl -sS https://sommelier-rpc.polkachu.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-SEEDS="ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@seeds.polkachu.com:14156"
+PEERS="$(curl -sS https://xpla-rpc.polkachu.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@seeds.polkachu.com:20156"
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -126,15 +143,13 @@ sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_rec
 sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/$FOLDER/config/app.toml
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/$FOLDER/config/app.toml
 
-# Set Config prometheus
-sed -i -e "s/prometheus = false/prometheus = true/" $HOME/$FOLDER/config/config.toml
-
 # Set minimum gas price
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$DENOM\"/" $HOME/$FOLDER/config/app.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.001$DENOM\"/" $HOME/$FOLDER/config/app.toml
 
-# Enable snapshots / State Sync
+# Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
-curl -L https://snap.nodexcapital.com/sommelier/sommelier-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+$BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER --keep-addr-book
+curl -L https://snap.nodexcapital.com/xpla/xpla-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
@@ -152,6 +167,7 @@ LimitNOFILE=65535
 Environment="DAEMON_HOME=$HOME/$FOLDER"
 Environment="DAEMON_NAME=$BINARY"
 Environment="UNSAFE_SKIP_BACKUP=true"
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/$FOLDER/cosmovisor/current/bin"
 
 [Install]
 WantedBy=multi-user.target
@@ -161,6 +177,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable $BINARY
 sudo systemctl start $BINARY
+
 
 echo -e "\033[0;35m=============================================================\033[0m"
 echo -e "\033[0;35mCONGRATS! SETUP FINISHED\033[0m"

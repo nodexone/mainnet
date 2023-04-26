@@ -22,6 +22,9 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | Realio       | 115          | [Click Here](./realio/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Terp         | 116          | [Click Here](./terp/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Sommelier    | 117          | [Click Here](./sommelier/README.md)  |[Click Here](https://nodexcapital.com/mainnet)|
+| Point        | 118          | [Click Here](./point/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
+| Umee         | 119          | [Click Here](./umee/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
+| Xpla         | 120          | [Click Here](./xpla/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
 | Akash        | N/A          | [Click Here](./akash/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Bitcanna     | N/A          | [Click Here](./bitcanna/README.md)|[Click Here](https://nodexcapital.com/mainnet)|    
 | Canto        | N/A          | [Click Here](./canto/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|         
@@ -40,7 +43,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | Sifchain     | N/A          | [Click Here](./sifchain/README.md)|[Click Here](https://nodexcapital.com/mainnet)|
 | Stargaze     | N/A          | [Click Here](./stargaze/README.md)|[Click Here](https://nodexcapital.com/mainnet)|
 | Teritori     | N/A          | [Click Here](./teritori/README.md)|[Click Here](https://nodexcapital.com/mainnet)|
-| Umee         | N/A          | [Click Here](./umee/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
+
 
 
 

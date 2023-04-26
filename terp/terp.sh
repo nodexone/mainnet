@@ -160,7 +160,7 @@ After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=/data/terp/go/bin/cosmovisor run start
+ExecStart=$(which cosmovisor) run start
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
