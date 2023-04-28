@@ -10,24 +10,24 @@ echo " ██╔██╗ ██║██║   ██║██║  ██║█�
 echo " ██║╚██╗██║██║   ██║██║  ██║██╔══╝   ██╔██╗     ██║     ██╔══██║██╔═══╝ ██║   ██║   ██╔══██║██║     ";
 echo " ██║ ╚████║╚██████╔╝██████╔╝███████╗██╔╝ ██╗    ╚██████╗██║  ██║██║     ██║   ██║   ██║  ██║███████╗";
 echo " ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝";
-echo ">>> Cosmovisor Automatic Installer for Osmosis | Chain ID : osmosis-1 <<<";
+echo ">>> Cosmovisor Automatic Installer for Stride | Chain ID : stride-1 <<<";
 echo -e "\e[0m"
 
 sleep 1
 
 # Variable
-SOURCE=osmosis
+SOURCE=stride
 WALLET=wallet
-BINARY=osmosisd
-CHAIN=osmosis-1 
-FOLDER=.osmosisd
-VERSION=v15.0.0
-DENOM=uosmo
-REPO=https://github.com/osmosis-labs/osmosis.git
+BINARY=strided
+CHAIN=stride-1 
+FOLDER=.stride
+VERSION=v9.0.0
+DENOM=ustrd
+REPO=https://github.com/Stride-Labs/stride.git
 COSMOVISOR=cosmovisor
-GENESIS=https://snap.nodexcapital.com/osmosis/genesis.json
-ADDRBOOK=https://snap.nodexcapital.com/osmosis/addrbook.json
-PORT=101
+GENESIS=https://snap.nodexcapital.com/stride/genesis.json
+ADDRBOOK=https://snap.nodexcapital.com/stride/addrbook.json
+PORT=121
 
 # Set Vars
 if [ ! $NODENAME ]; then
@@ -106,8 +106,8 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and
-PEERS="$(curl -sS https://osmosis.rpc.kjnodes.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
-SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@osmosis.rpc.kjnodes.com:29659"
+PEERS="$(curl -sS https://stride.rpc.kjnodes.com/net_info | jq -r '.result.peers[] | "\(.node_info.id)@\(.remote_ip):\(.node_info.listen_addr)"' | awk -F ':' '{print $1":"$(NF)}' | sed -z 's|\n|,|g;s|.$||')"
+SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@stride.rpc.kjnodes.com:16659"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
@@ -135,7 +135,7 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"01$DENOM\"/" $HOME/
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
-curl -L https://snap.nodexcapital.com/osmosis/osmosis-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+curl -L https://snap.nodexcapital.com/stride/stride-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
 [[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
