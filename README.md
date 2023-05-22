@@ -27,6 +27,7 @@ List of Cosmos ecosystem projets with custom ports configured below ❤
 | Xpla         | 120          | [Click Here](./xpla/README.md)    |[Click Here](https://nodexcapital.com/mainnet)|
 | Stride       | 121          | [Click Here](./stride/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Gitopia      | 122          | [Click Here](./gitopia/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
+| Nolus        | 123          | [Click Here](./nolus/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Akash        | N/A          | [Click Here](./akash/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|
 | Bitcanna     | N/A          | [Click Here](./bitcanna/README.md)|[Click Here](https://nodexcapital.com/mainnet)|    
 | Canto        | N/A          | [Click Here](./canto/README.md)   |[Click Here](https://nodexcapital.com/mainnet)|         
