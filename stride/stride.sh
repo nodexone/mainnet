@@ -21,7 +21,7 @@ WALLET=wallet
 BINARY=strided
 CHAIN=stride-1 
 FOLDER=.stride
-VERSION=v9.0.0
+VERSION=v9.0.1
 DENOM=ustrd
 REPO=https://github.com/Stride-Labs/stride.git
 COSMOVISOR=cosmovisor
@@ -77,7 +77,7 @@ sudo apt -qy upgrade
 
 # Install GO
 sudo rm -rf /usr/local/go
-curl -Ls https://go.dev/dl/go1.19.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+curl -Ls https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 

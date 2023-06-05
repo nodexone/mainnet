@@ -21,12 +21,12 @@ WALLET=wallet
 BINARY=nolusd
 CHAIN=pirin-1
 FOLDER=.nolus
-VERSION=v0.3.0
+VERSION=v0.4.0
 DENOM=unls
 COSMOVISOR=cosmovisor
 REPO=https://github.com/nolus-protocol/nolus-core
-GENESIS=https://raw.githubusercontent.com/nolus-protocol/nolus-networks/main/mainnet/pirin-1/genesis.json
-#ADDRBOOK=https://snap.nodexcapital.com/nolus/addrbook.json
+GENESIS=https://snap.nodexcapital.com/nolus/genesis.json
+ADDRBOOK=https://snap.nodexcapital.com/nolus/addrbook.json
 PORT=123
 
 # Set Vars
@@ -81,7 +81,7 @@ curl -Ls https://go.dev/dl/go1.19.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 
-# Get testnet version of Quasar
+# Get testnet version of Nolus
 cd $HOME
 rm -rf $SOURCE
 git clone $REPO
@@ -106,14 +106,14 @@ $BINARY config node tcp://localhost:${PORT}57
 $BINARY init $NODENAME --chain-id $CHAIN
 
 # Set peers and
-PEERS="e16568ad949050e0a817bddaf651a8cce04b0e7a@176.9.70.180:26656,aeb6c84798c3528b20ee02985208eb72ed794742@185.246.87.116:26666,b22fcc033291f44aec43d8fc464dbd5bee5394b8@185.162.250.199:26656,67d569007da736396d7b636224b97349adcde12f@51.89.98.102:55666,0b27bf24c6fd166f49f2f8616f9fca1dcf60b117@3.239.198.192:26656,4868bb0024f54952ae5e2f191e1363ac29aab49c@65.108.71.163:2640,39b1945d0ec6545ec9d45d0de9a9e7c058410b86@65.108.10.49:26457,1c6a4522b6f0f5217333032849f4a1dcfbbee218@38.242.134.110:26656,4eb14008fe3bdf9caf9707d8d15c1158a06866ac@65.109.116.204:12356,cbbb839a7fee054f7e272688787200b2b847bbf0@103.180.28.91:26656,65d9be311c814f775eda349427d11a39eb6b8623@5.10.19.39:26656,e5e2b4ae69c1115f126abcd5aa449842e29832b0@51.255.66.46:2110,488c9ee36fc5ee54e662895dfed5e5df9a5ff2d5@136.243.39.118:26656,7740f125a480d1329fa1015e7ea97f09ee4eded7@107.135.15.66:26746,18845b356886a99ee704f7a06de79fc8208b47d1@57.128.96.155:19756"
-SEEDS=""
+PEERS=""
+SEEDS="400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@nolus.rpc.kjnodes.com:14359"
 sed -i -e "s|^seeds *=.*|seeds = \"$SEEDS\"|" $HOME/$FOLDER/config/config.toml
 sed -i -e "s|^persistent_peers *=.*|persistent_peers = \"$PEERS\"|" $HOME/$FOLDER/config/config.toml
 
 # Download genesis and addrbook
 curl -Ls $GENESIS > $HOME/$FOLDER/config/genesis.json
-#curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
+curl -Ls $ADDRBOOK > $HOME/$FOLDER/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${PORT}58\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${PORT}57\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"tcp://127.0.0.1:${PORT}60\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${PORT}56\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \"127.0.0.1:${PORT}60\"%" $HOME/$FOLDER/config/config.toml
@@ -135,8 +135,8 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.0025$DENOM\"/" $H
 # Enable snapshots
 sed -i -e "s/^snapshot-interval *=.*/snapshot-interval = \"2000\"/" $HOME/$FOLDER/config/app.toml
 $BINARY tendermint unsafe-reset-all --home $HOME/$FOLDER
-#curl -L https://snap.nodexcapital.com/nolus/nolus-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
-#[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
+curl -L https://snap.nodexcapital.com/nolus/nolus-latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$FOLDER
+[[ -f $HOME/$FOLDER/data/upgrade-info.json ]] && cp $HOME/$FOLDER/data/upgrade-info.json $HOME/$FOLDER/cosmovisor/genesis/upgrade-info.json
 
 # Create Service
 sudo tee /etc/systemd/system/$BINARY.service > /dev/null << EOF
