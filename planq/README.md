@@ -13,7 +13,7 @@
 # Planq Mainnet | Chain ID : planq_7070-2 | Custom Port : 102
 
 Official documentation:
->- [Validator setup instructions](https://docs.planq.network/validators/quickstart/installation.html/)
+>- [Validator setup instructions](https://docs.planq.network/validators/overview.html)
 
 Explorer:
 >-  https://explorer.nodexcapital.com/planq
